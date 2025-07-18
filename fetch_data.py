@@ -4,7 +4,7 @@ from datetime import datetime
 import os
 
 # Load your API key from GitHub secrets or a local .env file
-API_KEY = os.getenv("OWM_API_KEY")
+API_KEY = 'ce14efec496ea4748b79ac46d82fecbb'
 LAT, LON = 51.5074, -0.1278  # Example: London
 url = f"https://api.openweathermap.org/data/2.5/onecall?lat={LAT}&lon={LON}&exclude=current,minutely,daily,alerts&units=metric&appid={API_KEY}"
 
