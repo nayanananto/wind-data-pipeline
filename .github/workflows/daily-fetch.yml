@@ -31,8 +31,10 @@ jobs:
       run: |
         git config --global user.name "github-actions"
         git config --global user.email "github-actions@users.noreply.github.com"
-        git remote set-url origin https://x-access-token:${GH_PAT}@github.com/${{ github.repository }}
+        git remote set-url origin https://${{ github.actor }}:${GH_PAT}@github.com/${{ github.repository }}.git
+        git pull origin main --rebase
         git add data/wind_data.csv
         git commit -m "📈 Daily wind data update" || echo "No changes to commit"
         git push origin HEAD:main
+
 
