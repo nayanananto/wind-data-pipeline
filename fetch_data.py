@@ -8,7 +8,7 @@ import os
 # --- Config ---
 LAT = 44.34
 LON = 10.99
-API_KEY = os.getenv("OWM_API_KEY")  # GitHub Actions will set this as a secret
+API_KEY = '85e0f0f1a60b006725a72b69e53d16c2'  # GitHub Actions will set this as a secret
 
 # --- API Call ---
 url = f"https://api.openweathermap.org/data/2.5/weather?lat={LAT}&lon={LON}&units=metric&appid={API_KEY}"
