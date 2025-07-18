@@ -28,7 +28,7 @@ record = {
 }
 df = pd.DataFrame([record])
 # --- CSV path ---
-csv_path = "wind-data-pipeline/data/wind_data.csv"
+csv_path = "data/wind_data.csv"
 os.makedirs("data", exist_ok=True)
 
 # --- Save or update ---
