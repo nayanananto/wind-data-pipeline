@@ -1,8 +1,8 @@
-name: Daily Wind Data Fetch
+name: Hourly Wind Data Fetch
 
 on:
   schedule:
-    - cron: '0 6 * * *'  # Run every day at 06:00 UTC
+    - cron: '0 * * * *'  # Run every day at 06:00 UTC
   workflow_dispatch:      # Allow manual run
 
 jobs:
@@ -39,7 +39,7 @@ jobs:
         git stash pop || true  # apply stash back
 
         git add data/wind_data.csv
-        git commit -m "📈 Daily wind data update" || echo "No changes to commit"
+        git commit -m "📈 Hourly wind data update" || echo "No changes to commit"
         git push origin HEAD:main
 
 
