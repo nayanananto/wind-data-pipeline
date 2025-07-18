@@ -2,7 +2,7 @@ name: Hourly Wind Data Fetch
 
 on:
   schedule:
-    - cron: '*/10 * * * *'   # Run every day at 06:00 UTC
+    - cron: '0 * * * *'  # Run every day at 06:00 UTC
   workflow_dispatch:      # Allow manual run
 
 jobs:
