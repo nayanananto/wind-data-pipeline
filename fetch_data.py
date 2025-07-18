@@ -1,38 +1,43 @@
+# fetch_daily.py
+
 import requests
 import pandas as pd
 from datetime import datetime
 import os
 
-# Load your API key from GitHub secrets or a local .env file
-API_KEY = 'ce14efec496ea4748b79ac46d82fecbb'
-LAT, LON = 51.5074, -0.1278  # Example: London
-url = f"https://api.openweathermap.org/data/2.5/onecall?lat={LAT}&lon={LON}&exclude=current,minutely,daily,alerts&units=metric&appid={API_KEY}"
+# --- Config ---
+LAT = 44.34
+LON = 10.99
+API_KEY = os.getenv("OWM_API_KEY")  # GitHub Actions will set this as a secret
 
+# --- API Call ---
+url = f"https://api.openweathermap.org/data/2.5/weather?lat={LAT}&lon={LON}&units=metric&appid={API_KEY}"
 response = requests.get(url)
 data = response.json()
-hourly_data = data.get('hourly', [])
 
-rows = []
-for hour in hourly_data:
-    dt = datetime.utcfromtimestamp(hour['dt'])
-    wind_speed = hour.get('wind_speed')
-    wind_deg = hour.get('wind_deg')  # Wind direction in degrees (0–360)
-    if wind_speed is not None and wind_deg is not None:
-        rows.append({
-            'datetime': dt,
-            'wind_speed': wind_speed,
-            'wind_deg': wind_deg
-        })
+# --- Extract wind speed and direction ---
+wind_speed = data['wind']['speed']
+wind_deg = data['wind']['deg']
+now_utc = datetime.utcnow()
 
-# Load existing data if exists
-csv_path = 'data/wind_data.csv'
+# --- Prepare a DataFrame entry ---
+record = {
+    'datetime': now_utc,
+    'wind_speed': wind_speed,
+    'wind_deg': wind_deg
+}
+df = pd.DataFrame([record])
+
+# --- CSV path ---
+csv_path = "data/wind_data.csv"
+os.makedirs("data", exist_ok=True)
+
+# --- Save or update ---
 if os.path.exists(csv_path):
-    existing_df = pd.read_csv(csv_path, parse_dates=['datetime'])
-    df = pd.DataFrame(rows)
-    combined = pd.concat([existing_df, df]).drop_duplicates(subset='datetime').sort_values('datetime')
+    old_df = pd.read_csv(csv_path, parse_dates=['datetime'])
+    combined = pd.concat([old_df, df], ignore_index=True).drop_duplicates(subset='datetime')
 else:
-    combined = pd.DataFrame(rows)
+    combined = df
 
-# Save updated data
 combined.to_csv(csv_path, index=False)
-print("✅ Wind speed and direction updated.")
+print(f"✅ Logged data at {now_utc}.")
