@@ -27,13 +27,13 @@ record = {
     'wind_deg': wind_deg
 }
 df = pd.DataFrame([record])
-
 # --- CSV path ---
-csv_path = "data/wind_data.csv"
+csv_path = "wind-data-pipeline/data/wind_data.csv"
 os.makedirs("data", exist_ok=True)
 
 # --- Save or update ---
 if os.path.exists(csv_path):
+    
     old_df = pd.read_csv(csv_path, parse_dates=['datetime'])
     combined = pd.concat([old_df, df], ignore_index=True).drop_duplicates(subset='datetime')
 else:
@@ -41,3 +41,5 @@ else:
 
 combined.to_csv(csv_path, index=False)
 print(f"✅ Logged data at {now_utc}.")
+
+
