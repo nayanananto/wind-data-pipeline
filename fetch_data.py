@@ -4,6 +4,7 @@ import requests
 import pandas as pd
 from datetime import datetime, timezone
 import os
+import math
 
 # --- Config ---
 LAT = 44.34
@@ -35,14 +36,19 @@ wind_gusts_10m = data.get("wind", {}).get("gust")  # may be missing
 temperature_2m = data.get("main", {}).get("temp")
 relative_humidity_2m = data.get("main", {}).get("humidity")
 
+dir_rad = float(wind_direction_10m) * math.pi / 180.0
+wind_dir_sin = math.sin(dir_rad)
+wind_dir_cos = math.cos(dir_rad)
+
 # --- Prepare a DataFrame entry with your target column names ---
 record = {
-    "datetime": now_utc.isoformat(),  # store as ISO string for consistent CSV parsing
+    "datetime": now_utc.isoformat(),
     "wind_speed": wind_speed_10m,
-    "wind_direction_10m_deg": wind_direction_10m,
-    "wind_gusts_10m_ms": wind_gusts_10m,
+    "wind_dir_sin": wind_dir_sin,
+    "wind_dir_cos": wind_dir_cos,
+    "wind_gust_10m_ms": wind_gusts_10m,
     "temperature_2m_c": temperature_2m,
-    "relative_humidity_2m": relative_humidity_2m
+    "relative_humidity_2m": relative_humidity_2m,
 }
 df = pd.DataFrame([record])
 
