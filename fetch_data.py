@@ -46,7 +46,7 @@ record = {
     "wind_speed": wind_speed_10m,
     "wind_dir_sin": wind_dir_sin,
     "wind_dir_cos": wind_dir_cos,
-    "wind_gust_10m_ms": wind_gusts_10m,
+    "wind_gusts_10m_ms": wind_gusts_10m,
     "temperature_2m_c": temperature_2m,
     "relative_humidity_2m": relative_humidity_2m,
 }
