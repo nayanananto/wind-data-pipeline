@@ -11,6 +11,20 @@ LAT = 44.34
 LON = 10.99
 API_KEY = os.environ.get("API_KEY")  # GitHub Actions will set this as a secret
 
+def trim_repo_csv_to_k(path_csv: str, K: int) -> None:
+    """
+    Load the wind_data_pipeline CSV, keep only the most recent K rows
+    by datetime, and overwrite the file in-place.
+    """
+    df = pd.read_csv(path_csv)
+    df["datetime"] = pd.to_datetime(df["datetime"], errors="coerce")
+    df = df.dropna(subset=["datetime"]).sort_values("datetime")
+
+    if len(df) > K:
+        df = df.iloc[-K:]  # keep last K rows
+
+    df.to_csv(path_csv, index=False)
+
 if not API_KEY:
     raise ValueError("API_KEY is not set. Add it as a GitHub Actions secret.")
 
@@ -74,4 +88,5 @@ else:
     combined = df.sort_values("datetime")
 
 combined.to_csv(csv_path, index=False)
+trim_repo_csv_to_k("data/wind_data.csv", K=17520)  # e.g. last 2 years hourly
 print(f"✅ Logged data at {now_utc.isoformat()}.")
